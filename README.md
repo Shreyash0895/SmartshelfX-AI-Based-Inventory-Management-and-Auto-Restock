@@ -439,7 +439,6 @@ SmartShelfX sends automated emails in two scenarios:
 
 Shreyash Jokare
 
+Github : https://github.com/Shreyash0895
 
----
 
-*Built with ❤️ using Angular 19, Node.js, MongoDB & Python ML*
