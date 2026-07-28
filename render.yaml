@@ -14,7 +14,7 @@ services:
     name: smartshelfx-backend
     # Pull pre-built Docker image from Docker Hub
     image:
-      url: docker.io/YOUR_DOCKERHUB_USERNAME/smartshelfx-backend:latest
+      url: docker.io/shreyash220404/smartshelfx-backend:latest
     region: singapore
     plan: free
     # Port our backend listens on
@@ -53,7 +53,7 @@ services:
   - type: web
     name: smartshelfx-ml
     image:
-      url: docker.io/YOUR_DOCKERHUB_USERNAME/smartshelfx-ml:latest
+      url: docker.io/shreyash220404/smartshelfx-ml:latest
     region: singapore
     plan: free
     httpPort: 8000
