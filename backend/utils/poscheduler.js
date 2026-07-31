@@ -1,5 +1,5 @@
 const { Product, PurchaseOrder, User } = require('../models');
-const { sendPurchaseOrderEmail }       = require('./Mailer');
+const { sendPurchaseOrderEmail }       = require('./mailer');
 
 const INTERVAL_MS = 2 * 60 * 1000; // 2 minutes
 
