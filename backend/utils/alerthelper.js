@@ -48,7 +48,7 @@ const createAutoPO = async (product) => {
     try {
         const vendor = await User.findById(vendor_id).select('name email');
         if (vendor?.email) {
-            const { sendPurchaseOrderEmail } = require('./mailer');
+            const { sendPurchaseOrderEmail } = require('./Mailer');
             await sendPurchaseOrderEmail({
                 vendorEmail: vendor.email, vendorName: vendor.name,
                 productName: name, productSku: sku, quantity, orderId: po._id,
