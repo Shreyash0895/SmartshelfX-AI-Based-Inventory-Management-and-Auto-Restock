@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "name": "smartshelfx-frontend",
+  "buildCommand": "npx ng build --configuration production",
+  "outputDirectory": "dist/smartshelfx/browser",
+  "installCommand": "npm install",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://smartshelfx-backend-1wp5.onrender.com/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,4 @@
 export const environment = {
     production: true,
-    // ✅ Replace this with your actual Render backend URL after deployment
-    apiUrl: 'https://smartshelfx-backend.onrender.com/api'
+    apiUrl: 'https://smartshelfx-backend-1wp5.onrender.com/api'
 };
