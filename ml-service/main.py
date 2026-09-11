@@ -46,7 +46,7 @@ def get_db():
     return _mongo_client["smartshelfx"]
 
 
-# ── Pydantic Models ────────────────────────────────────────────────────
+# ── Pydantic Models ────────
 
 class ForecastItem(BaseModel):
     product_id:    str
