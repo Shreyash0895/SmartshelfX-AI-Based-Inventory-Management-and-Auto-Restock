@@ -492,7 +492,7 @@ MongoDB Atlas (Cloud Database)
 |-------------|--------|-----|
 | Local | Manager / Vendor | http://localhost:4200 |
 | Local | Admin | http://localhost:4201 |
-| Production | All users | https://smartshelfx.vercel.app |
+| Production | All users | [https://smartshelfx.vercel.app](https://smartshelf-x-ai-based-inventory-man.vercel.app/) |
 
 
 ---
