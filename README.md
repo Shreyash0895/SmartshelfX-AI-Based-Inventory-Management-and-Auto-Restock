@@ -20,7 +20,7 @@
 
 | Service | URL |
 |---------|-----|
-| **Frontend** | https://smartshelfx.vercel.app |
+| **Frontend** |[ https://smartshelfx.vercel.app ](https://smartshelf-x-ai-based-inventory-man.vercel.app/)|
 
 
 ---
