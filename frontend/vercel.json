@@ -7,7 +7,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://smartshelfx-ai-based-inventory-l9cp.onrender.com/api/:path*"
+      "destination": "https://smartshelfx-ai-based-inventory.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",
