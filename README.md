@@ -27,10 +27,7 @@
 
 > ⚠️ **Note:** Backend and ML Service are hosted on Render Free Tier. They may take **30-60 seconds to wake up** after inactivity. Open the Health Check URL first and wait for a response before logging in.
 
-### Default Login Credentials
-| Role | Email | Password |
-|------|-------|----------|
-| **Admin** | admin@smartshelfx.com | Admin@123 |
+
 
 ---
 
