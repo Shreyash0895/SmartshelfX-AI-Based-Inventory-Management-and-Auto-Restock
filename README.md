@@ -18,10 +18,19 @@
 
 ## 🌐 Live Demo
 
-| Service | URL |
-|---------|-----|
-| **Frontend** | https://smartshelfx.vercel.app |
+| Service | URL | Status |
+|---------|-----|--------|
+| **Frontend** | https://smartshelf-x-ai-based-inventory-man.vercel.app | ✅ Live |
+| **Backend API** | https://smartshelfx-ai-based-inventory.onrender.com | ✅ Live |
+| **Health Check** | https://smartshelfx-ai-based-inventory.onrender.com/api/health | ✅ Live |
+| **ML Service** | https://smartshelfx-ai-based-inventory-l9cp.onrender.com | ✅ Live |
 
+> ⚠️ **Note:** Backend and ML Service are hosted on Render Free Tier. They may take **30-60 seconds to wake up** after inactivity. Open the Health Check URL first and wait for a response before logging in.
+
+### Default Login Credentials
+| Role | Email | Password |
+|------|-------|----------|
+| **Admin** | admin@smartshelfx.com | Admin@123 |
 
 ---
 
@@ -29,6 +38,7 @@
 
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
 - [Prerequisites](#-prerequisites)
 - [Installation & Setup](#-installation--setup)
 - [Environment Variables](#-environment-variables)
@@ -49,7 +59,7 @@
 ## ✨ Features
 
 ### 🤖 AI & Forecasting
-- AI-powered demand forecasting using Python ML service (scikit-learn LinearRegression)
+- AI-powered demand forecasting using Python ML service (scikit-learn, XGBoost)
 - Predicts stock requirements for the next **7 / 14 / 30 days**
 - Risk level classification: **LOW / MEDIUM / HIGH / CRITICAL**
 - Auto-triggers purchase orders for HIGH/CRITICAL risk products
@@ -143,8 +153,8 @@ Three dedicated report tabs — each exportable as CSV:
 - **Docker Compose** for local full-stack testing with one command
 - **CI/CD Pipeline** via GitHub Actions — auto test, build, and deploy on push to main
 - **Frontend** deployed on **Vercel**
-- **Backend** deployed on **Render**
-- **Database** on **MongoDB Atlas** (cloud)
+- **Backend + ML Service** deployed on **Render**
+- **Database** on **MongoDB Atlas** (cloud, AWS Mumbai region)
 
 ---
 
@@ -158,7 +168,7 @@ Three dedicated report tabs — each exportable as CSV:
 | **Backend** | Node.js, Express.js |
 | **Database** | MongoDB Atlas (via Mongoose ODM) |
 | **Authentication** | JWT (jsonwebtoken), bcryptjs |
-| **ML Service** | Python — scikit-learn, pandas, numpy, FastAPI |
+| **ML Service** | Python — scikit-learn, XGBoost, pandas, numpy, FastAPI |
 | **Email** | Nodemailer (Gmail SMTP) |
 | **File Import** | csv-parser, xlsx |
 | **HTTP Client** | Axios (backend → ML service) |
@@ -168,11 +178,12 @@ Three dedicated report tabs — each exportable as CSV:
 | **CI/CD** | GitHub Actions |
 | **Frontend Hosting** | Vercel |
 | **Backend Hosting** | Render |
-| **Database Hosting** | MongoDB Atlas |
+| **ML Hosting** | Render |
+| **Database Hosting** | MongoDB Atlas (AWS Mumbai) |
 
 ---
 
-
+---
 
 ## ✅ Prerequisites
 
@@ -181,7 +192,7 @@ Three dedicated report tabs — each exportable as CSV:
 | **Node.js** | v18+ | https://nodejs.org |
 | **npm** | v9+ | Comes with Node.js |
 | **MongoDB** | Atlas (cloud) | https://cloud.mongodb.com |
-| **Python** | v3.9+ | https://www.python.org/downloads |
+| **Python** | v3.11+ | https://www.python.org/downloads |
 | **Angular CLI** | v19 | `npm install -g @angular/cli` |
 | **Git** | Latest | https://git-scm.com |
 | **Docker** *(optional)* | Latest | https://www.docker.com/products/docker-desktop |
@@ -221,7 +232,7 @@ You should see:
 
 ```bash
 cd ../frontend
-npm install
+npm install --legacy-peer-deps
 node start-dev.js
 ```
 
@@ -236,7 +247,7 @@ Wait ~30-60 seconds:
 ```bash
 cd ../ml-service
 pip install -r requirements.txt
-python main.py
+uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
 ML service starts on `http://localhost:8000`
@@ -244,9 +255,9 @@ ML service starts on `http://localhost:8000`
 ### 5. Create Admin User (First Time Only)
 
 ```bash
-curl -X POST http://localhost:3000/api/auth/register \
+curl -X POST https://smartshelfx-ai-based-inventory.onrender.com/api/auth/register \
   -H "Content-Type: application/json" \
-  -d "{\"name\":\"Admin\",\"email\":\"admin@smartshelfx.com\",\"password\":\"Admin@123\",\"role\":\"ADMIN\"}"
+  -d '{"name":"Admin","email":"admin@smartshelfx.com","password":"Admin@123","role":"ADMIN"}'
 ```
 
 ---
@@ -260,14 +271,14 @@ PORT=3000
 NODE_ENV=production
 
 # MongoDB Atlas
-MONGO_URI=mongodb+srv://USERNAME:PASSWORD@cluster.mongodb.net/smartshelfx?retryWrites=true&w=majority
+MONGO_URI=mongodb://SmartShelfX_project:YOUR_PASSWORD@ac-qygmbbb-shard-00-00.wcumodi.mongodb.net:27017,ac-qygmbbb-shard-00-01.wcumodi.mongodb.net:27017,ac-qygmbbb-shard-00-02.wcumodi.mongodb.net:27017/smartshelfx?ssl=true&replicaSet=atlas-100jpf-shard-0&authSource=admin&appName=SmartShelfX
 
 # JWT
 JWT_SECRET=your_super_secret_jwt_key_here
 JWT_EXPIRES_IN=24h
 
 # ML Service
-ML_SERVICE_URL=http://localhost:8000
+ML_SERVICE_URL=https://smartshelfx-ai-based-inventory-l9cp.onrender.com
 
 # Gmail SMTP (use App Password)
 SMTP_HOST=smtp.gmail.com
@@ -278,7 +289,7 @@ SMTP_PASS=your_16_char_app_password
 SMTP_FROM=SmartShelfX <noreply@smartshelfx.com>
 
 # Frontend URL
-APP_URL=http://localhost:4200
+APP_URL=https://smartshelf-x-ai-based-inventory-man.vercel.app
 ```
 
 > **Note:** For Gmail use an **App Password** — Google Account → Security → 2-Step Verification → App Passwords
@@ -291,10 +302,9 @@ APP_URL=http://localhost:4200
 
 | Step | Command | URL |
 |------|---------|-----|
-| 1. MongoDB | Start MongoDB locally or use Atlas | — |
-| 2. Backend | `cd backend && node server.js` | http://localhost:3000 |
-| 3. ML Service | `cd ml-service && python main.py` | http://localhost:8000 |
-| 4. Frontend | `cd frontend && node start-dev.js` | http://localhost:4200 / 4201 |
+| 1. Backend | `cd backend && node server.js` | http://localhost:3000 |
+| 2. ML Service | `cd ml-service && uvicorn main:app --port 8000` | http://localhost:8000 |
+| 3. Frontend | `cd frontend && node start-dev.js` | http://localhost:4200 / 4201 |
 
 ### Option B — With Docker Compose
 
@@ -313,24 +323,17 @@ docker-compose down
 
 ### Dockerfiles
 
-Each service has its own multi-stage Dockerfile:
-
-| Service | Base Image | Final Size |
-|---------|-----------|-----------|
-| Backend | node:18-alpine | ~150MB |
-| Frontend | node:18-alpine + nginx:alpine | ~25MB |
-| ML Service | python:3.11-slim | ~200MB |
+| Service | Base Image | Purpose |
+|---------|-----------|---------|
+| Backend | node:18-alpine (multi-stage) | Node.js API container |
+| Frontend | node:18-alpine + nginx:alpine | Angular + Nginx server |
+| ML Service | python:3.11-slim (multi-stage) | FastAPI ML container |
 
 ### Build Images Manually
 
 ```bash
-# Backend
 docker build -t YOUR_USERNAME/smartshelfx-backend:latest ./backend
-
-# Frontend
 docker build -t YOUR_USERNAME/smartshelfx-frontend:latest ./frontend
-
-# ML Service
 docker build -t YOUR_USERNAME/smartshelfx-ml:latest ./ml-service
 ```
 
@@ -357,7 +360,7 @@ GitHub Actions triggers
 Job 1: Test backend (syntax check all files)
 Job 2: Build Angular production bundle
         ↓
-Job 3: Deploy backend to Render
+Job 3: Deploy backend to Render (webhook)
 Job 4: Deploy frontend to Vercel
         ↓
 Live app updated — zero manual steps!
@@ -376,36 +379,53 @@ Live app updated — zero manual steps!
 
 ## 🌍 Deployment
 
-### Architecture
+### Live Architecture
 
 ```
 User Browser
      ↓
 Vercel (Frontend — Angular 19)
-     ↓ API calls
+https://smartshelf-x-ai-based-inventory-man.vercel.app
+     ↓ API calls via /api proxy
 Render (Backend — Node.js + Express)
+https://smartshelfx-ai-based-inventory.onrender.com
+     ↓ ML forecast calls
+Render (ML Service — Python FastAPI)
+https://smartshelfx-ai-based-inventory-l9cp.onrender.com
      ↓
-MongoDB Atlas (Cloud Database)
+MongoDB Atlas (Database — AWS Mumbai)
 ```
 
 ### Deploy Backend to Render
 
 1. Go to https://render.com → New Web Service
 2. Connect GitHub repo
-3. Set Root Directory: `backend`
-4. Build Command: `npm install`
-5. Start Command: `node server.js`
+3. **Root Directory:** `backend`
+4. **Build Command:** `npm install`
+5. **Start Command:** `node server.js`
 6. Add environment variables
-7. Deploy → get URL like `https://smartshelfx-backend.onrender.com`
+7. Deploy
+
+### Deploy ML Service to Render
+
+1. Go to https://render.com → New Web Service
+2. Connect GitHub repo
+3. **Root Directory:** `ml-service`
+4. **Runtime:** Python 3
+5. **Build Command:** `pip install --upgrade pip setuptools wheel && pip install -r requirements.txt`
+6. **Start Command:** `uvicorn main:app --host 0.0.0.0 --port 8000`
+7. Add `MONGO_URI` and `PYTHON_VERSION=3.11.9` environment variables
+8. Deploy
 
 ### Deploy Frontend to Vercel
 
 1. Go to https://vercel.com → New Project
 2. Import GitHub repo
-3. Set Root Directory: `frontend`
-4. Build Command: `npx ng build --configuration production`
-5. Output Directory: `dist/smartshelfx/browser`
-6. Deploy → get URL like `https://smartshelfx.vercel.app`
+3. **Root Directory:** `frontend`
+4. **Build Command:** `npx ng build --configuration production`
+5. **Output Directory:** `dist/smartshelfx/browser`
+6. **Install Command:** `npm install --legacy-peer-deps`
+7. Deploy
 
 ---
 
@@ -490,9 +510,10 @@ MongoDB Atlas (Cloud Database)
 
 | Environment | Portal | URL |
 |-------------|--------|-----|
+| **Production** | All users | https://smartshelf-x-ai-based-inventory-man.vercel.app |
 | Local | Manager / Vendor | http://localhost:4200 |
 | Local | Admin | http://localhost:4201 |
-| Production | All users | https://smartshelfx.vercel.app |
+
 
 
 ---
@@ -500,9 +521,9 @@ MongoDB Atlas (Cloud Database)
 ## 📖 Usage Guide
 
 ### First Time Setup
-1. Start all services or use the live deployment
-2. Create admin user using the curl command above
-3. Login as Admin
+1. Open https://smartshelf-x-ai-based-inventory-man.vercel.app
+2. Wait 30-60 seconds for backend to wake up (Render free tier)
+3. Login with admin credentials above
 
 ### Adding Products
 1. Login as **Admin** or **Manager** → **Inventory → Products Catalog**
@@ -516,7 +537,7 @@ MongoDB Atlas (Cloud Database)
 
 ### Running AI Forecast
 1. Go to **AI Forecasting** → Click **Run Forecast Now**
-2. ML analyses transaction history → assigns risk levels
+2. ML service analyses transaction history → assigns risk levels
 3. HIGH/CRITICAL products get alerts and POs automatically
 4. Use **Notify Vendors** to manually alert vendors
 
@@ -600,11 +621,7 @@ SmartShelfX sends automated emails in two scenarios:
 4. Push branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
----
 
-## 📄 License
-
-This project is licensed under the MIT License.
 
 ---
 
@@ -615,4 +632,4 @@ GitHub: [@Shreyash0895](https://github.com/Shreyash0895)
 
 ---
 
-*Built with ❤️ using Angular 19, Node.js, MongoDB Atlas, Python ML, Docker & GitHub Actions*
+*Built with ❤️ using Angular 19, Node.js, MongoDB Atlas, Python FastAPI, Docker & GitHub Actions*
