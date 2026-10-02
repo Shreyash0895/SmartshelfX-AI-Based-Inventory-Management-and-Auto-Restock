@@ -14,7 +14,28 @@ from bson import ObjectId
 from xgboost import XGBRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_absolute_error
+# ── Keep Alive — prevents Render free tier from sleeping ──────────
+import threading
+import urllib.request
+import time
 
+def keep_alive():
+    ML_URL = "https://smartshelfx-ai-based-inventory-l9cp.onrender.com"
+
+    def ping():
+        while True:
+            time.sleep(14 * 60)  # wait 14 minutes then ping
+            try:
+                with urllib.request.urlopen(f"{ML_URL}/health", timeout=10) as r:
+                    print(f"[KeepAlive] ✅ Pinged → {r.status}")
+            except Exception as e:
+                print(f"[KeepAlive] ❌ Failed: {e}")
+
+    thread = threading.Thread(target=ping, daemon=True)
+    thread.start()
+    print("[KeepAlive] Self-ping started")
+
+keep_alive()
 load_dotenv()
 
 app = FastAPI(title="SmartShelfX ML Service", version="2.0.0")
